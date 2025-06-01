@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Weight Loss Routine Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+			margin-right: 12rem;
+			margin-left: 12rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f1f5f9;
+        }
+
+        .header h1 {
+            color: #134e4a;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .date-selector {
+            margin: 20px 0;
+        }
+
+        .date-selector select {
+            padding: 15px 25px;
+            font-size: 1.2em;
+            border: 2px solid #14b8a6;
+            border-radius: 12px;
+            background: white;
+            color: #0f766e;
+            min-width: 250px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2314b8a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+
+        .date-selector select:hover {
+            border-color: #0d9488;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(20, 184, 166, 0.2);
+        }
+
+        .date-selector select:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+        }
+
+        .progress-banner {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .time-window {
+            margin-bottom: 40px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            border: 1px solid #f1f5f9;
+        }
+
+        .time-window:hover {
+            transform: translateY(-5px);
+        }
+
+        .morning {
+            background: linear-gradient(135deg, #c3f6de 0%, #33f591 100%);
+        }
+
+        .midday {
+            background: linear-gradient(135deg, #ccf8ee 0%, #0bd8ac 100%);
+        }
+
+        .evening {
+            background: linear-gradient(135deg, #ceeed8 0%, #2ef372 100%);
+        }
+
+        .night {
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+        }
+
+        .time-header {
+            padding: 25px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: #134e4a;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .time-content {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .activity-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #10b981 0%, #14b8a6 100%);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .activity-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .activity-header {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #065f46;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .meal-details, .workout-details {
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .meal-details:hover, .workout-details:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .calories {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .exercise-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #14b8a6, #0d9488);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(20, 184, 166, 0.4);
+        }
+
+        .hydration-reminder {
+            background: #f0fdfa;
+            border: 1px solid #5eead4;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #134e4a;
+        }
+
+        .motivation-quote {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-style: italic;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .exercise-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-item:hover {
+            border-color: #14b8a6;
+            transform: translateY(-3px);
+        }
+
+        .duration-badge {
+            background: #dc2626;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .week-indicator {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .day-summary {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .day-summary h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .day-summary p {
+            color: #ecfdf5;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none;
+        }
+		
+		/* Media query for tablets and smaller screens */
+		@media (max-width: 1000px) {
+		  body {
+			margin-right: 1rem;
+			margin-left: 1rem;
+		  }
+		}
+		@media (max-width: 767px) {
+		  body {
+			margin-right: 2rem;
+			margin-left: 2rem;
+		  }
+		}
+		@media (max-width: 600px) {
+		  body {
+			margin-right: 1rem;
+			margin-left: 1rem;
+		  }
+		}
+		@media (max-width: 500px) {
+		  body {
+			margin-right: .2rem;
+			margin-left: .2rem;
+		  }
+		}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏋️‍♂️ Your Daily Transformation Dashboard</h1>
+        <p style="font-size: 1.2em; color: #666; margin-bottom: 10px;">185 lbs → 160 lbs Journey</p>
+        
+        <div class="date-selector">
+            <label for="dateSelect" style="font-size: 1.1em; font-weight: bold; color: #065f46;">Select Your Day:</label><br><br>
+            <select id="dateSelect" onchange="updateDay()">
+                <option value="">Choose a date...</option>
+            </select>
+        </div>
+
+        <div class="progress-banner" id="progressBanner" style="display: none;">
+            <span id="progressText"></span>
+        </div>
+    </div>
+
+    <div id="dailyContent" class="hidden">
+        <!-- Morning Section -->
+        <div class="time-window morning">
+            <div class="time-header">🌅 MORNING POWER (6:00 - 8:00 AM)</div>
+            <div class="time-content">
+                <div id="weekIndicator" class="week-indicator"></div>
+                
+                <div class="activity-section">
+                    <div class="activity-header">
+                        💧 Wake Up Ritual
+                    </div>
+                    <div class="hydration-reminder">
+                        <strong>6:00 AM:</strong> 16 oz water with lemon slice + 5 minutes of deep breathing
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🚶‍♂️ Morning Walk
+                    </div>
+                    <div class="meal-details">
+                        <strong>6:30-7:00 AM:</strong> 30-minute brisk walk around your neighborhood<br>
+                        <em>Goal: Get your heart rate up and metabolism started for the day!</em>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        💪 Core Power Session
+                    </div>
+                    <div class="workout-details">
+                        <strong>7:30-7:40 AM:</strong> Session 1 - Core Power (45 sec work, 15 sec rest)
+                        <div class="exercise-grid">
+                            <div class="exercise-item">
+                                <strong>Standard Crunches</strong>
+                                <div class="duration-badge">45 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=proper+form+standard+crunches+technique" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Leg Raises</strong>
+                                <div class="duration-badge">45 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=lying+leg+raises+proper+form+abs" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Bicycle Crunches</strong>
+                                <div class="duration-badge">45 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=bicycle+crunches+proper+technique+abs" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Plank Hold</strong>
+                                <div class="duration-badge">45 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=perfect+plank+hold+form+technique" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Dead Bug</strong>
+                                <div class="duration-badge">45 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=dead+bug+exercise+proper+form+core" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🍽️ First Meal (Break Fast)
+                    </div>
+                    <div class="meal-details">
+                        <strong>8:00 AM:</strong> <span id="firstMealContent"></span>
+                        <span class="calories">300 calories</span>
+                        <div class="hydration-reminder" style="margin-top: 10px;">
+                            💧 Drink 8 oz water 15 minutes before eating
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Midday Section -->
+        <div class="time-window midday">
+            <div class="time-header">☀️ MIDDAY MOMENTUM (12:00 - 3:00 PM)</div>
+            <div class="time-content">
+                <div class="activity-section">
+                    <div class="activity-header">
+                        💪 Strength Focus Session
+                    </div>
+                    <div class="workout-details">
+                        <strong>12:00-12:10 PM:</strong> <span id="middayWorkoutType"></span>
+                        <div class="exercise-grid" id="middayExercises">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🍽️ Main Meal (Lunch)
+                    </div>
+                    <div class="meal-details">
+                        <strong>12:30 PM:</strong> <span id="mainMealContent"></span>
+                        <span class="calories">450-500 calories</span>
+                        <div class="hydration-reminder" style="margin-top: 10px;">
+                            💧 Drink 8 oz water 15 minutes before eating
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        💪 Cardio Burst Session
+                    </div>
+                    <div class="workout-details">
+                        <strong>3:00-3:10 PM:</strong> Session 3 - Cardio Burst (50 sec work, 10 sec rest)
+                        <div class="exercise-grid">
+                            <div class="exercise-item">
+                                <strong>Mountain Climbers</strong>
+                                <div class="duration-badge">50 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=mountain+climbers+proper+form+technique" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>High Knees</strong>
+                                <div class="duration-badge">50 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=high+knees+in+place+proper+form" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Jumping Jacks</strong>
+                                <div class="duration-badge">50 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=jumping+jacks+proper+form+technique" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Modified Burpees</strong>
+                                <div class="duration-badge">50 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=modified+burpees+beginner+step+back" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Side Steps</strong>
+                                <div class="duration-badge">50 sec</div><br>
+                                <a href="https://www.youtube.com/results?search_query=lateral+side+steps+with+arms+cardio" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🥜 Afternoon Snack
+                    </div>
+                    <div class="meal-details">
+                        <strong>4:00 PM:</strong> <span id="snackContent"></span>
+                        <span class="calories">150 calories</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evening Section -->
+        <div class="time-window evening">
+            <div class="time-header">🌆 EVENING ENERGY (6:00 - 7:30 PM)</div>
+            <div class="time-content">
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🚶‍♂️ Evening Walk
+                    </div>
+                    <div class="meal-details">
+                        <strong>6:00-6:30 PM:</strong> 30-minute brisk walk<br>
+                        <em>Perfect time to reflect on your day and prepare for a healthy dinner!</em>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🍽️ Final Meal (Early Dinner)
+                    </div>
+                    <div class="meal-details">
+                        <strong>6:30 PM:</strong> <span id="finalMealContent"></span>
+                        <span class="calories">350-400 calories</span>
+                        <div class="hydration-reminder" style="margin-top: 10px;">
+                            ⚠️ <strong>LAST MEAL OF THE DAY!</strong> No food after 6:30 PM - Start your 16-hour fast
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🧘‍♂️ Recovery & Flexibility
+                    </div>
+                    <div class="workout-details">
+                        <strong>7:00-7:10 PM:</strong> Session 4 - Flexibility & Recovery (1 min each)
+                        <div class="exercise-grid">
+                            <div class="exercise-item">
+                                <strong>Cat-Cow Stretches</strong>
+                                <div class="duration-badge">1 min</div><br>
+                                <a href="https://www.youtube.com/results?search_query=cat+cow+stretch+yoga+proper+form" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Child's Pose to Cobra</strong>
+                                <div class="duration-badge">1 min</div><br>
+                                <a href="https://www.youtube.com/results?search_query=child+pose+to+cobra+flow+yoga" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Spinal Twists</strong>
+                                <div class="duration-badge">1 min</div><br>
+                                <a href="https://www.youtube.com/results?search_query=seated+spinal+twist+yoga+stretch" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Forward Fold</strong>
+                                <div class="duration-badge">1 min</div><br>
+                                <a href="https://www.youtube.com/results?search_query=standing+forward+fold+yoga+stretch" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                            <div class="exercise-item">
+                                <strong>Breathing + Ab Vacuums</strong>
+                                <div class="duration-badge">1 min</div><br>
+                                <a href="https://www.youtube.com/results?search_query=stomach+vacuum+exercise+breathing+technique" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Night Section -->
+        <div class="time-window night">
+            <div class="time-header">🌙 NIGHT ROUTINE (7:30 PM - 10:00 PM)</div>
+            <div class="time-content">
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🍵 Evening Wind-Down
+                    </div>
+                    <div class="hydration-reminder">
+                        <strong>7:30 PM onwards:</strong> Only herbal tea (chamomile, green tea) - NO MORE FOOD!<br>
+                        💧 Continue sipping water throughout evening to stay hydrated
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        📝 Daily Tracking
+                    </div>
+                    <div class="meal-details">
+                        <strong>Check off today's wins:</strong><br>
+                        ✅ Completed all 4 workout sessions<br>
+                        ✅ Stayed within calorie target (1300-1400)<br>
+                        ✅ Drank 10-12 glasses of water<br>
+                        ✅ No food after 6:30 PM<br>
+                        ✅ Took progress photos (if weekly)<br>
+                        <br>
+                        <strong>Weight tomorrow morning:</strong> _____ lbs
+                    </div>
+                </div>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        🛏️ Sleep Preparation
+                    </div>
+                    <div class="meal-details">
+                        <strong>9:30-10:00 PM:</strong> Prepare for 7-8 hours of quality sleep<br>
+                        • Dim lights and avoid screens<br>
+                        • Practice gratitude for today's healthy choices<br>
+                        • Set alarm for tomorrow's 6:00 AM wake-up<br>
+                        • Lay out workout clothes for morning<br>
+                        <em>Good sleep = better weight loss and recovery!</em>
+                    </div>
+                </div>
+
+                <div class="motivation-quote" id="dailyMotivation">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="day-summary">
+            <h3>🎯 Today's Totals</h3>
+            <p><strong>Total Calories:</strong> 1300-1400 | <strong>Workout Time:</strong> 40 minutes | <strong>Steps Goal:</strong> 8,000+</p>
+            <p><strong>Fasting Window:</strong> 6:30 PM - 8:00 AM (13.5 hours) | <strong>Water Goal:</strong> 10-12 glasses</p>
+        </div>
+    </div>
+
+    <script>
+        const mealPlans = {
+            week1: {
+                firstMeals: ["Vegetable poha (1 cup) with lots of veggies, minimal oil", "Vegetable poha (1 cup) with lots of veggies, minimal oil", "Oats upma (3/4 cup) with mixed vegetables", "Oats upma (3/4 cup) with mixed vegetables", "Besan chilla (2 medium) with tomato-onion stuffing", "Besan chilla (2 medium) with tomato-onion stuffing", "Greek yogurt (1 cup) with berries and 1 tsp honey"],
+                mainMeals: ["Brown rice (1/2 cup) + masoor dal (1 cup) + mixed vegetables + salad", "2 small rotis + rajma (3/4 cup) + cucumber salad + mint chutney", "Quinoa (1/2 cup) + chana dal (1 cup) + sautéed spinach + tomato", "2 rotis + paneer curry (100g paneer) + green salad", "Brown rice (1/2 cup) + sambhar (1 cup) + vegetables + coconut chutney", "Khichdi (3/4 cup) + yogurt (1/2 cup) + roasted vegetables", "2 rotis + mixed dal (1 cup) + bhindi sabzi + onion salad"],
+                snacks: ["10 almonds + green tea", "Apple + 5 walnuts", "Buttermilk (1 glass)", "Carrot sticks + hummus (2 tbsp)", "10 almonds + green tea", "Apple + 5 walnuts", "Buttermilk (1 glass)"],
+                finalMeals: ["Large mixed salad + chickpeas (1/2 cup) + olive oil dressing", "Vegetable soup (2 cups) + 1 slice whole grain bread", "Grilled vegetables + paneer (75g) + mint chutney", "Moong dal soup (1.5 cups) + sautéed vegetables", "Cucumber-tomato salad + sprouts (1/2 cup) + lemon dressing", "Clear vegetable broth + steamed vegetables + small roti", "Palak soup + roasted cauliflower + yogurt (small)"]
+            },
+            week2: {
+                firstMeals: ["Rava idli (2 pieces) with coconut chutney + sambar (small bowl)", "Rava idli (2 pieces) with coconut chutney + sambar (small bowl)", "Cauliflower paratha (1 medium) with mint yogurt + pickle", "Cauliflower paratha (1 medium) with mint yogurt + pickle", "Tofu scramble (100g tofu) with onions, tomatoes, turmeric + 1 slice bread", "Tofu scramble (100g tofu) with onions, tomatoes, turmeric + 1 slice bread", "Oats dosa (2 small) with tomato chutney"],
+                mainMeals: ["Brown rice (1/2 cup) + sambar with sweet potato chunks (1 cup) + poriyal (cabbage stir-fry) + pickle", "2 rotis + rajma masala (3/4 cup) + cauliflower-peas sabzi + onion salad", "Quinoa pulao with tofu (1/2 cup quinoa + 75g tofu) + raita + papad", "Sweet potato paratha (2 small) + dal fry + sautéed cabbage + mint chutney", "Brown rice (1/2 cup) + tofu curry (100g) + yam fry + sambar", "Ragi mudde/balls (2 small) + rajma curry + steamed cauliflower + buttermilk", "2 rotis + mixed dal + cabbage-carrot sabzi + sweet potato raita"],
+                snacks: ["Roasted sweet potato cubes + green tea", "Tofu tikka (4-5 pieces)", "Boiled yam with chaat masala", "Cauliflower popcorn (roasted)", "Roasted sweet potato cubes + green tea", "Tofu tikka (4-5 pieces)", "Boiled yam with chaat masala"],
+                finalMeals: ["Cabbage soup (2 cups) + tofu salad with lemon dressing", "Roasted cauliflower and sweet potato bowl + tahini dressing", "Clear vegetable broth with tofu cubes + steamed yam", "Rajma salad (1/2 cup) + cucumber-tomato salad + whole grain crackers (2)", "Mashed sweet potato (1 medium) + sautéed cabbage + yogurt", "Cauliflower rice (1.5 cups) + tofu curry (light) + pickle", "Yam chaat + sprouts + mint chutney"]
+            },
+            week3: {
+                firstMeals: ["Sweet potato pancakes (2 small) with cinnamon + berries", "Sweet potato pancakes (2 small) with cinnamon + berries", "Tofu bhurji wrap (1 small tortilla/roti with tofu scramble)", "Tofu bhurji wrap (1 small tortilla/roti with tofu scramble)", "Cauliflower hash browns (2 patties) + Greek yogurt dip", "Cauliflower hash browns (2 patties) + Greek yogurt dip", "Yam porridge with almond milk + nuts (1 tbsp)"],
+                mainMeals: ["Buddha bowl: Brown rice (1/3 cup) + roasted tofu (100g) + roasted sweet potato + cabbage slaw + tahini dressing", "2 rotis + punjabi rajma + aloo gobi (cauliflower-potato) + pickle", "Sweet potato gnocchi (homemade, 1 cup) + tofu marinara + side salad", "Stuffed cabbage rolls (2 medium) with tofu-quinoa filling + tomato sauce", "Yam and rajma curry + brown rice (1/2 cup) + roasted cauliflower", "Tofu tikka masala + cauliflower rice (1 cup) + naan/roti (1 small)", "Sweet potato and black bean bowl + avocado (if available) + lime dressing"],
+                snacks: ["Baked yam fries + herbal tea", "Tofu satay (3-4 skewers)", "Roasted cauliflower with spices", "Sweet potato hummus with veggie sticks", "Baked yam fries + herbal tea", "Tofu satay (3-4 skewers)", "Roasted cauliflower with spices"],
+                finalMeals: ["Asian tofu lettuce wraps + clear miso-style broth", "Roasted vegetable medley (cauliflower, sweet potato, cabbage) + balsamic glaze", "Cabbage and tofu stir-fry + small portion brown rice", "Sweet potato and lentil soup (2 cups) + whole grain roll (1 small)", "Stuffed bell peppers with tofu-cauliflower rice + tomato sauce", "Yam and vegetable curry (light coconut milk) + small roti", "Mediterranean tofu salad + roasted vegetables + olives (5-6)"]
+            }
+        };
+
+        const workoutSchedule = {
+            monday: { type: "Strength Focus" },
+            tuesday: { type: "Cardio Focus + Core" },
+            wednesday: { type: "Strength Focus" },
+            thursday: { type: "Cardio Focus + Core" },
+            friday: { type: "Strength Focus" },
+            saturday: { type: "Elliptical + Extended Core" },
+            sunday: { type: "Complete Rest" }
+        };
+
+        const motivationalQuotes = [
+            "💪 Day 1: Every champion was once a beginner who refused to give up!",
+            "🔥 Day 2: You're not just losing weight, you're gaining strength, confidence, and health!",
+            "⭐ Day 3: The pain you feel today will be the strength you feel tomorrow!",
+            "🎯 Day 4: Success is the sum of small efforts repeated day in and day out!",
+            "💎 Day 5: You are stronger than your excuses and more powerful than your fears!",
+            "🚀 Day 6: Progress, not perfection. Every healthy choice counts!",
+            "🌟 Day 7: One week down! You're building habits that will last a lifetime!"
+        ];
+
+        function generateDateOptions() {
+            const select = document.getElementById('dateSelect');
+            const startDate = new Date(2025, 5, 2);
+            const endDate = new Date(2025, 6, 31);
+            
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+                const option = document.createElement('option');
+                const dateStr = date.toISOString().split('T')[0];
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                option.value = dateStr;
+                option.textContent = formattedDate;
+                select.appendChild(option);
+            }
+        }
+
+        function getWeekAndDay(dateStr) {
+            const selectedDate = new Date(dateStr + 'T00:00:00');
+            const startDate = new Date('2025-06-02T00:00:00');
+            const daysDiff = Math.floor((selectedDate - startDate) / (1000 * 60 * 60 * 24));
+            
+            const weekNumber = Math.floor(daysDiff / 7) + 1;
+            const weekCycle = ((weekNumber - 1) % 3) + 1;
+            const dayIndex = daysDiff % 7;
+            
+            const dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const dayName = dayNames[dayIndex];
+            
+            return { weekCycle, dayIndex, weekNumber, dayName };
+        }
+
+        function getCurrentTimeWindow() {
+            const now = new Date();
+            const hours = now.getHours();
+            
+            if (hours >= 6 && hours < 12) {
+                return 'morning';
+            } else if (hours >= 12 && hours < 18) {
+                return 'midday';
+            } else if (hours >= 18 && hours < 22) {
+                return 'evening';
+            } else {
+                return 'night';
+            }
+        }
+
+        function scrollToCurrentTime() {
+            const currentWindow = getCurrentTimeWindow();
+            const targetElement = document.querySelector(`.time-window.${currentWindow}`);
+            
+            if (targetElement) {
+                setTimeout(() => {
+                    targetElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                    
+                    const elementPosition = targetElement.offsetTop - 100;
+                    window.scrollTo({
+                        top: elementPosition,
+                        behavior: 'smooth'
+                    });
+                }, 500);
+            }
+        }
+
+        function updateDay() {
+            const dateSelect = document.getElementById('dateSelect');
+            const selectedDate = dateSelect.value;
+            
+            if (!selectedDate) {
+                document.getElementById('dailyContent').classList.add('hidden');
+                document.getElementById('progressBanner').style.display = 'none';
+                return;
+            }
+
+            const { weekCycle, dayIndex, weekNumber, dayName } = getWeekAndDay(selectedDate);
+            
+            document.getElementById('dailyContent').classList.remove('hidden');
+            document.getElementById('progressBanner').style.display = 'block';
+            
+            const startDate = new Date('2025-06-02T00:00:00');
+            const endDate = new Date('2025-07-31T00:00:00');
+            const currentDate = new Date(selectedDate + 'T00:00:00');
+            const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            const currentDay = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            const progressPercent = Math.round((currentDay / totalDays) * 100);
+            
+            document.getElementById('progressText').textContent = 
+                `Day ${currentDay} of ${totalDays} | Week ${weekNumber} | ${progressPercent}% Complete | Target: 185→160 lbs`;
+
+            const weekNames = ['', 'Week 1: North Indian Focus', 'Week 2: South Indian & Fusion', 'Week 3: Global Fusion & Creative'];
+            document.getElementById('weekIndicator').textContent = weekNames[weekCycle];
+
+            const weekKey = `week${weekCycle}`;
+            const meals = mealPlans[weekKey];
+            
+            if (!meals) return;
+            
+            document.getElementById('firstMealContent').textContent = meals.firstMeals[dayIndex];
+            document.getElementById('mainMealContent').textContent = meals.mainMeals[dayIndex];
+            document.getElementById('snackContent').textContent = meals.snacks[dayIndex];
+            document.getElementById('finalMealContent').textContent = meals.finalMeals[dayIndex];
+
+            const workout = workoutSchedule[dayName];
+            if (!workout) return;
+            document.getElementById('middayWorkoutType').textContent = `Session 2 - ${workout.type}`;
+            
+            const middayExercisesDiv = document.getElementById('middayExercises');
+            middayExercisesDiv.innerHTML = '';
+            
+            if (dayName === 'saturday') {
+                middayExercisesDiv.innerHTML = `
+                    <div class="exercise-item">
+                        <strong>Elliptical Machine</strong>
+                        <div class="duration-badge">20-30 min</div><br>
+                        <em>Easy to moderate pace</em>
+                    </div>
+                    <div class="exercise-item">
+                        <strong>Extended Core Session</strong>
+                        <div class="duration-badge">20 min</div><br>
+                        <em>Combine all week's exercises</em>
+                    </div>
+                `;
+            } else if (dayName === 'sunday') {
+                middayExercisesDiv.innerHTML = `
+                    <div class="exercise-item">
+                        <strong>Complete Rest Day</strong>
+                        <div class="duration-badge">Rest</div><br>
+                        <em>Gentle stretching only</em>
+                    </div>
+                    <div class="exercise-item">
+                        <strong>Meal Prep</strong>
+                        <div class="duration-badge">30-60 min</div><br>
+                        <em>Prepare for upcoming week</em>
+                    </div>
+                `;
+            } else if (dayName === 'monday' || dayName === 'wednesday' || dayName === 'friday') {
+                const strengthExercises = [
+                    { name: 'Dumbbell Squats', link: 'dumbbell+goblet+squats+proper+form' },
+                    { name: 'Wall/Knee Push-ups', link: 'wall+pushups+knee+pushups+progression' },
+                    { name: 'Dumbbell Rows', link: 'bent+over+dumbbell+rows+proper+form' },
+                    { name: 'Overhead Press', link: 'standing+dumbbell+overhead+press+form' },
+                    { name: 'Russian Twists', link: 'russian+twists+with+weight+proper+form' }
+                ];
+                
+                strengthExercises.forEach(exercise => {
+                    middayExercisesDiv.innerHTML += `
+                        <div class="exercise-item">
+                            <strong>${exercise.name}</strong>
+                            <div class="duration-badge">40 sec</div><br>
+                            <a href="https://www.youtube.com/results?search_query=${exercise.link}" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                        </div>
+                    `;
+                });
+            } else {
+                const cardioExercises = [
+                    { name: 'Mountain Climbers', link: 'mountain+climbers+proper+form+technique' },
+                    { name: 'High Knees', link: 'high+knees+in+place+proper+form' },
+                    { name: 'Jumping Jacks', link: 'jumping+jacks+proper+form+technique' },
+                    { name: 'Modified Burpees', link: 'modified+burpees+beginner+step+back' },
+                    { name: 'Side Steps', link: 'lateral+side+steps+with+arms+cardio' }
+                ];
+                
+                cardioExercises.forEach(exercise => {
+                    middayExercisesDiv.innerHTML += `
+                        <div class="exercise-item">
+                            <strong>${exercise.name}</strong>
+                            <div class="duration-badge">50 sec</div><br>
+                            <a href="https://www.youtube.com/results?search_query=${exercise.link}" target="_blank" class="exercise-link">🎥 Watch Demo</a>
+                        </div>
+                    `;
+                });
+            }
+
+            const quoteIndex = Math.min(currentDay - 1, motivationalQuotes.length - 1);
+            document.getElementById('dailyMotivation').textContent = motivationalQuotes[quoteIndex];
+
+            scrollToCurrentTime();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generateDateOptions();
+            
+            const defaultDate = '2025-06-02';
+            document.getElementById('dateSelect').value = defaultDate;
+            updateDay();
+        });
+    </script>
+</body>
+</html>
